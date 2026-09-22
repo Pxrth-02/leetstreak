@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { User, CheckCircle2, ExternalLink, RefreshCw, Flame, Shield } from 'lucide-react';
+import { CheckCircle2, ExternalLink, RefreshCw, Flame, Shield, Bell, Sparkles, Mail } from 'lucide-react';
 import LinkLeetCode from './LinkLeetCode';
 
 export default function Profile() {
@@ -17,6 +17,16 @@ export default function Profile() {
     );
   }
 
+  const getInitials = (name) => {
+    if (!name) return 'U';
+    return name
+      .split(' ')
+      .map((n) => n[0])
+      .slice(0, 2)
+      .join('')
+      .toUpperCase();
+  };
+
   return (
     <div className="card">
       <div className="brand-pill">
@@ -24,56 +34,55 @@ export default function Profile() {
         <span>Verified Profile</span>
       </div>
 
-      <h2 style={{ marginBottom: '0.5rem' }}>Your Account</h2>
-      <p style={{ marginBottom: '1.75rem' }}>
-        Profile details verified with Google OAuth & LeetCode.
-      </p>
-
-      <div className="profile-stat-box">
-        <div className="profile-stat-row">
-          <span className="profile-stat-label">Name</span>
-          <span className="profile-stat-value">{user?.name}</span>
+      <div className="profile-hero">
+        <div className="profile-avatar-large">
+          {getInitials(user?.name)}
         </div>
-        <div className="profile-stat-row">
-          <span className="profile-stat-label">Email</span>
-          <span className="profile-stat-value">{user?.email}</span>
-        </div>
-        <div className="profile-stat-row">
-          <span className="profile-stat-label">Account ID</span>
-          <span className="profile-stat-value" style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-            {user?.id}
-          </span>
-        </div>
-        <div className="profile-stat-row">
-          <span className="profile-stat-label">LeetCode Status</span>
-          <div>
-            {user?.leetcodeUsername ? (
-              <span className="badge badge-success">
-                <CheckCircle2 size={12} />
-                <span>Linked & Verified</span>
-              </span>
-            ) : (
-              <span className="badge badge-warning">
-                <span>Not Linked</span>
-              </span>
-            )}
+        <div className="profile-info-block">
+          <div className="profile-name-text">{user?.name}</div>
+          <div className="profile-email-text">{user?.email}</div>
+          <div style={{ marginTop: '0.4rem' }}>
+            <span className="badge badge-success">
+              <CheckCircle2 size={12} />
+              <span>Google Verified</span>
+            </span>
           </div>
         </div>
-        {user?.leetcodeUsername && (
-          <div className="profile-stat-row">
-            <span className="profile-stat-label">LeetCode Username</span>
+      </div>
+
+      <div className="profile-details-grid">
+        <div className="profile-card-item">
+          <span className="profile-card-label">Linked Handle</span>
+          {user?.leetcodeUsername ? (
             <a
               href={`https://leetcode.com/u/${user.leetcodeUsername}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="profile-stat-value"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+              className="profile-card-value"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--amber-primary)' }}
             >
               <span>{user.leetcodeUsername}</span>
               <ExternalLink size={14} />
             </a>
-          </div>
-        )}
+          ) : (
+            <span className="badge badge-warning">Not Linked</span>
+          )}
+        </div>
+
+        <div className="profile-card-item">
+          <span className="profile-card-label">Verification Status</span>
+          <span className="badge badge-success">
+            <CheckCircle2 size={12} />
+            <span>LeetCode Active</span>
+          </span>
+        </div>
+
+        <div className="profile-card-item">
+          <span className="profile-card-label">Account ID</span>
+          <span className="profile-card-value" style={{ fontSize: '0.75rem', color: 'var(--text-dark)' }}>
+            {user?.id ? user.id.substring(0, 12) + '...' : '—'}
+          </span>
+        </div>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -84,7 +93,7 @@ export default function Profile() {
             id="change-handle-btn"
           >
             <RefreshCw size={16} />
-            <span>Change LeetCode Handle</span>
+            <span>Update LeetCode Handle</span>
           </button>
         ) : (
           <button
@@ -98,8 +107,15 @@ export default function Profile() {
         )}
       </div>
 
-      <div style={{ marginTop: '2rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-        <span>Ready for Module 2: Daily email streak reminders via Brevo</span>
+      {/* Module 2 Roadmap Preview */}
+      <div className="coming-soon-box">
+        <div className="coming-soon-title">
+          <Sparkles size={16} />
+          <span>Next: Module 2 Automation</span>
+        </div>
+        <div className="coming-soon-desc">
+          Automated daily scans, Brevo email reminders when you haven't solved a problem, and streak recovery alerts!
+        </div>
       </div>
     </div>
   );

@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Code2, ArrowRight, AlertCircle, CheckCircle2, Flame } from 'lucide-react';
+import { Code2, ArrowRight, AlertCircle, CheckCircle2, Flame, Sparkles } from 'lucide-react';
 
 export default function LinkLeetCode({ onComplete }) {
-  const { user, updateLeetCodeUsername } = useAuth();
+  const { updateLeetCodeUsername } = useAuth();
   const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
+  const sampleHandles = ['tourist', 'neal_wu', 'yep'];
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (!username.trim()) {
       setError('Please enter your LeetCode username');
       return;
@@ -24,7 +26,7 @@ export default function LinkLeetCode({ onComplete }) {
       setSuccess(true);
       setTimeout(() => {
         if (onComplete) onComplete(verifiedHandle);
-      }, 800);
+      }, 700);
     } catch (err) {
       setError(err.message || 'Failed to verify LeetCode account.');
     } finally {
@@ -32,16 +34,21 @@ export default function LinkLeetCode({ onComplete }) {
     }
   };
 
+  const handleSelectSample = (handle) => {
+    setUsername(handle);
+    setError(null);
+  };
+
   return (
     <div className="card">
       <div className="brand-pill">
         <Flame size={14} />
-        <span>Link Account</span>
+        <span>Step 2 · Link Account</span>
       </div>
 
-      <h2 style={{ marginBottom: '0.5rem' }}>Link Your LeetCode</h2>
-      <p style={{ marginBottom: '1.75rem' }}>
-        We verify your username directly with LeetCode's public GraphQL API to track your daily streak.
+      <h2>Link Your LeetCode</h2>
+      <p className="hero-subtitle">
+        We verify your username directly with LeetCode's public GraphQL API before saving.
       </p>
 
       {error && (
@@ -60,9 +67,10 @@ export default function LinkLeetCode({ onComplete }) {
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label className="form-label" htmlFor="leetcode-username-input">
-            LeetCode Username
-          </label>
+          <div className="form-label">
+            <span>LeetCode Username</span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-dark)' }}>Public profile</span>
+          </div>
           <div className="input-wrapper">
             <Code2 size={18} className="input-icon" />
             <input
@@ -76,6 +84,20 @@ export default function LinkLeetCode({ onComplete }) {
               autoFocus
             />
           </div>
+
+          <div className="quick-handles">
+            <span>Quick test handles:</span>
+            {sampleHandles.map((handle) => (
+              <button
+                key={handle}
+                type="button"
+                className="handle-pill"
+                onClick={() => handleSelectSample(handle)}
+              >
+                {handle}
+              </button>
+            ))}
+          </div>
         </div>
 
         <button
@@ -87,7 +109,7 @@ export default function LinkLeetCode({ onComplete }) {
           {loading ? (
             <>
               <div className="spinner"></div>
-              <span>Verifying with LeetCode...</span>
+              <span>Verifying with LeetCode API...</span>
             </>
           ) : (
             <>
@@ -98,8 +120,8 @@ export default function LinkLeetCode({ onComplete }) {
         </button>
       </form>
 
-      <div style={{ marginTop: '1.75rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-        <span>Note: We only access your public profile data. No password or session cookies are ever requested.</span>
+      <div style={{ marginTop: '1.75rem', fontSize: '0.78rem', color: 'var(--text-dark)' }}>
+        <span>We only query your public handle. No passwords or credentials are ever requested.</span>
       </div>
     </div>
   );

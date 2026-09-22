@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Flame, ShieldCheck, Sparkles, AlertCircle } from 'lucide-react';
+import { Sparkles, ShieldCheck, Zap, Lock, Flame, AlertCircle } from 'lucide-react';
 
 export default function Login() {
   const { loginWithGoogle, authError } = useAuth();
@@ -11,7 +11,6 @@ export default function Login() {
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 
   useEffect(() => {
-    // Initialize Google Identity Services if script is loaded and client ID exists
     const initializeGsi = () => {
       if (window.google?.accounts?.id && googleClientId && googleClientId !== 'YOUR_GOOGLE_CLIENT_ID') {
         try {
@@ -57,7 +56,6 @@ export default function Login() {
     }
   };
 
-  // Quick Dev Sign-In for instant local testing without setting up Google Cloud Console credentials
   const handleDevLogin = async () => {
     try {
       setDevLoading(true);
@@ -79,10 +77,27 @@ export default function Login() {
         <span>Module 1 · Auth & Verification</span>
       </div>
 
-      <h1 style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>Welcome to LeetStreak</h1>
-      <p style={{ marginBottom: '2rem' }}>
-        Track your daily problem streak, verify your account, and stay accountable.
+      <h1>
+        Never break your <span className="text-gradient">streak</span>.
+      </h1>
+      <p className="hero-subtitle">
+        Sign in to link your LeetCode handle. We verify your profile directly with LeetCode's public GraphQL API.
       </p>
+
+      <div className="feature-chips">
+        <div className="feature-chip">
+          <Zap size={14} color="#ffa116" />
+          <span>Instant Verification</span>
+        </div>
+        <div className="feature-chip">
+          <Lock size={14} color="#00f2fe" />
+          <span>Zero Password Stored</span>
+        </div>
+        <div className="feature-chip">
+          <Flame size={14} color="#ff5e3a" />
+          <span>Daily Habit Tracker</span>
+        </div>
+      </div>
 
       {errorMessage && (
         <div className="alert alert-error">
@@ -96,9 +111,9 @@ export default function Login() {
         {(!googleClientId || googleClientId === 'YOUR_GOOGLE_CLIENT_ID') && (
           <div className="alert alert-info" style={{ width: '100%', textAlign: 'left' }}>
             <div>
-              <strong>Google Client ID not configured</strong>
+              <strong>Google Identity Ready</strong>
               <div style={{ fontSize: '0.8rem', marginTop: '0.25rem' }}>
-                Set <code>VITE_GOOGLE_CLIENT_ID</code> in <code>client/.env</code> to enable live Google OAuth.
+                Add your <code>VITE_GOOGLE_CLIENT_ID</code> in <code>client/.env</code> for live Google OAuth, or use the 1-click Test Sign-In below!
               </div>
             </div>
           </div>
@@ -106,14 +121,14 @@ export default function Login() {
       </div>
 
       <div className="divider">
-        <span>or</span>
+        <span>Instant Developer Access</span>
       </div>
 
-      {/* Quick Developer Login */}
+      {/* Quick Developer Login Button */}
       <button
         onClick={handleDevLogin}
         disabled={devLoading}
-        className="btn btn-secondary"
+        className="btn btn-dev"
         id="dev-login-btn"
       >
         {devLoading ? (
@@ -126,7 +141,7 @@ export default function Login() {
         )}
       </button>
 
-      <div style={{ marginTop: '2rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+      <div style={{ marginTop: '2rem', fontSize: '0.78rem', color: 'var(--text-dark)' }}>
         <span>Security: Protected by JWT (15-min access) & httpOnly refresh cookie (30-day session)</span>
       </div>
     </div>
