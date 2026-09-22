@@ -1,0 +1,16 @@
+{
+  "name": "leetstreak",
+  "version": "1.0.0",
+  "private": true,
+  "description": "LeetStreak - Root Workspace Scripts",
+  "scripts": {
+    "dev": "concurrently -n \"server,client\" -c \"blue,green\" \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "server": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}

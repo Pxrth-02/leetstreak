@@ -1,20 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark h-full bg-[#181818]" lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffa116'><path d='M13.5 2L3 14h8v8l10.5-12h-8z'/></svg>" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LeetStreak — Never Miss Your Daily Problem</title>
-    <meta name="description" content="Stay accountable to your daily LeetCode streak with automatic account verification and smart reminders." />
-    <!-- Modern Typography: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffa116'><path d='M19.48 13.03A4.001 4.001 0 0 0 17 6.13a6.994 6.994 0 0 0-4.05-4.07 1 1 0 0 0-1.28 1.13c.27 1.48-.05 3.01-.89 4.22-.84 1.2-2.14 1.99-3.6 2.19a4.015 4.015 0 0 0-3.32 3.16 7.978 7.978 0 0 0 2.22 7.74 8.01 8.01 0 0 0 11.36 0 7.96 7.96 0 0 0 2.04-7.47zm-7.48 7.02c-2.76 0-5-2.24-5-5 0-1.84 1.01-3.44 2.5-4.29.21.68.58 1.3 1.08 1.8 1.41 1.41 3.42 1.83 5.22 1.25-.43 3.56-3.44 6.24-3.8 6.24z'/></svg>" />
+    <title>LeetStreak — Module 1: Auth &amp; Verification</title>
+    <!-- Tailwind CSS v3 with Plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              lc: {
+                bg: '#1a1a1a',
+                card: '#262626',
+                elevated: '#2e2e2e',
+                border: '#383838',
+                borderLight: '#4a4a4a',
+                orange: '#FFA116',
+                orangeHover: '#e08e13',
+                easy: '#00B8A3',
+                medium: '#FFC01E',
+                hard: '#FF375F',
+                textPrimary: '#eff1f6',
+                textSecondary: '#9ca3af',
+                textMuted: '#6b7280',
+                input: '#1f1f1f',
+                codeBg: '#141414'
+              }
+            },
+            fontFamily: {
+              mono: ['JetBrains Mono', 'Fira Code', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+              sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'sans-serif']
+            }
+          }
+        }
+      }
+    </script>
+    <!-- Typography and Custom Layout Overrides -->
+    <style data-purpose="custom-scrollbar">
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #181818;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #333333;
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #444444;
+      }
+    </style>
+    <style data-purpose="code-highlighting">
+      .token-keyword { color: #cc99cd; }
+      .token-field { color: #67cdcc; }
+      .token-variable { color: #f08d49; }
+      .token-type { color: #e2777a; }
+      .token-punctuation { color: #abb2bf; }
+      .token-comment { color: #5c6370; font-style: italic; }
+    </style>
     <!-- Google Identity Services -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
-  <body>
-    <div id="root"></div>
+  <body class="h-full bg-[#181818] text-[#d1d5db] font-sans flex flex-col antialiased selection:bg-[#ffa116]/20 selection:text-[#ffa116]">
+    <div id="root" class="h-full flex flex-col"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

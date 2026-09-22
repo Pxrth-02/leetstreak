@@ -10,24 +10,37 @@ export function AuthProvider({ children }) {
 
   // Check existing session via refresh token on initial mount
   useEffect(() => {
+    let isMounted = true;
+
     async function checkAuth() {
       try {
         const refreshRes = await apiClient.post('/auth/refresh');
-        if (refreshRes.data?.accessToken) {
+        if (isMounted && refreshRes.data?.accessToken) {
           setAccessToken(refreshRes.data.accessToken);
           const meRes = await apiClient.get('/user/me');
-          setUser(meRes.data);
+          if (isMounted) setUser(meRes.data);
         }
       } catch (err) {
-        // Not logged in or expired refresh token
-        setAccessToken(null);
-        setUser(null);
+        if (isMounted) {
+          setAccessToken(null);
+          setUser(null);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     }
 
+    // Safety timeout: never hang loading state
+    const timer = setTimeout(() => {
+      if (isMounted) setLoading(false);
+    }, 1200);
+
     checkAuth();
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
   }, []);
 
   const loginWithGoogle = async (idToken) => {

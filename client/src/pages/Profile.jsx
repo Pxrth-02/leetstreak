@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { CheckCircle2, ExternalLink, RefreshCw, Flame, Shield, Bell, Sparkles, Mail } from 'lucide-react';
+import { CheckCircle2, ExternalLink, RefreshCw, Flame, Sparkles } from 'lucide-react';
 import LinkLeetCode from './LinkLeetCode';
 
 export default function Profile() {
@@ -28,93 +28,78 @@ export default function Profile() {
   };
 
   return (
-    <div className="card">
-      <div className="brand-pill">
-        <Shield size={14} />
-        <span>Verified Profile</span>
-      </div>
-
-      <div className="profile-hero">
-        <div className="profile-avatar-large">
-          {getInitials(user?.name)}
-        </div>
-        <div className="profile-info-block">
-          <div className="profile-name-text">{user?.name}</div>
-          <div className="profile-email-text">{user?.email}</div>
-          <div style={{ marginTop: '0.4rem' }}>
-            <span className="badge badge-success">
+    <div className="w-full max-w-lg">
+      <div className="rounded-xl border border-[#333333] bg-[#262626] p-8 space-y-6 shadow-sm">
+        {/* Profile Header */}
+        <div className="flex items-center space-x-4">
+          <div className="w-14 h-14 rounded-full bg-[#ffa116] text-[#1a1a1a] font-bold text-xl flex items-center justify-center shrink-0">
+            {getInitials(user?.name)}
+          </div>
+          <div className="space-y-1">
+            <h2 className="text-xl font-semibold text-white tracking-tight">{user?.name}</h2>
+            <p className="text-xs text-[#9ca3af]">{user?.email}</p>
+            <div className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full bg-emerald-950/50 border border-emerald-800/60 text-emerald-400 text-[11px]">
               <CheckCircle2 size={12} />
               <span>Google Verified</span>
-            </span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="profile-details-grid">
-        <div className="profile-card-item">
-          <span className="profile-card-label">Linked Handle</span>
-          {user?.leetcodeUsername ? (
-            <a
-              href={`https://leetcode.com/u/${user.leetcodeUsername}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="profile-card-value"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--amber-primary)' }}
-            >
-              <span>{user.leetcodeUsername}</span>
-              <ExternalLink size={14} />
-            </a>
-          ) : (
-            <span className="badge badge-warning">Not Linked</span>
-          )}
+        {/* Details Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+          <div className="p-4 rounded-lg bg-[#1a1a1a] border border-[#383838] space-y-1">
+            <span className="text-[11px] uppercase tracking-wider text-[#8c8c8c] font-medium">
+              Linked LeetCode Handle
+            </span>
+            <div>
+              {user?.leetcodeUsername ? (
+                <a
+                  href={`https://leetcode.com/u/${user.leetcodeUsername}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center space-x-1.5 text-sm font-semibold text-[#ffa116] hover:underline"
+                >
+                  <span>{user.leetcodeUsername}</span>
+                  <ExternalLink size={13} />
+                </a>
+              ) : (
+                <span className="text-xs text-amber-400">Not Linked</span>
+              )}
+            </div>
+          </div>
+
+          <div className="p-4 rounded-lg bg-[#1a1a1a] border border-[#383838] space-y-1">
+            <span className="text-[11px] uppercase tracking-wider text-[#8c8c8c] font-medium">
+              Status
+            </span>
+            <div className="inline-flex items-center space-x-1.5 text-xs text-emerald-400 font-medium">
+              <CheckCircle2 size={13} />
+              <span>LeetCode Active</span>
+            </div>
+          </div>
         </div>
 
-        <div className="profile-card-item">
-          <span className="profile-card-label">Verification Status</span>
-          <span className="badge badge-success">
-            <CheckCircle2 size={12} />
-            <span>LeetCode Active</span>
-          </span>
-        </div>
-
-        <div className="profile-card-item">
-          <span className="profile-card-label">Account ID</span>
-          <span className="profile-card-value" style={{ fontSize: '0.75rem', color: 'var(--text-dark)' }}>
-            {user?.id ? user.id.substring(0, 12) + '...' : '—'}
-          </span>
-        </div>
-      </div>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-        {user?.leetcodeUsername ? (
+        {/* Actions */}
+        <div>
           <button
             onClick={() => setEditingHandle(true)}
-            className="btn btn-secondary"
             id="change-handle-btn"
+            className="w-full h-10 px-4 bg-[#1a1a1a] hover:bg-[#222222] border border-[#383838] hover:border-[#4d4d4d] text-white text-xs font-medium rounded-lg transition-colors flex items-center justify-center space-x-2 cursor-pointer"
           >
-            <RefreshCw size={16} />
+            <RefreshCw size={14} />
             <span>Update LeetCode Handle</span>
           </button>
-        ) : (
-          <button
-            onClick={() => setEditingHandle(true)}
-            className="btn btn-primary"
-            id="link-handle-btn"
-          >
-            <Flame size={16} />
-            <span>Link LeetCode Account</span>
-          </button>
-        )}
-      </div>
-
-      {/* Module 2 Roadmap Preview */}
-      <div className="coming-soon-box">
-        <div className="coming-soon-title">
-          <Sparkles size={16} />
-          <span>Next: Module 2 Automation</span>
         </div>
-        <div className="coming-soon-desc">
-          Automated daily scans, Brevo email reminders when you haven't solved a problem, and streak recovery alerts!
+
+        {/* Module 2 Roadmap Preview */}
+        <div className="p-4 rounded-lg bg-[#1f1f1f] border border-[#333333] space-y-2">
+          <div className="flex items-center space-x-2 text-xs font-semibold text-[#ffa116]">
+            <Sparkles size={14} />
+            <span>Coming Next: Module 2 Automation</span>
+          </div>
+          <p className="text-xs text-[#8c8c8c] leading-relaxed">
+            Automated daily scans, Brevo email reminders when you haven't solved a problem, and streak recovery alerts!
+          </p>
         </div>
       </div>
     </div>
