@@ -8,7 +8,15 @@ const userSchema = new mongoose.Schema({
   leetcodeUsername: { type: String, default: null },
   refreshTokenHash: { type: String, default: null },
   isActive: { type: Boolean, default: true },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  notificationPreferences: {
+    email: { type: String, default: null },
+    dailyReminderEnabled: { type: Boolean, default: true },
+    potdReminderEnabled: { type: Boolean, default: true },
+    contestAlertEnabled: { type: Boolean, default: true },
+    reminderTime: { type: String, default: '19:00' }, // HH:MM 24hr format
+    timezone: { type: String, default: 'Asia/Kolkata' }
+  }
 });
 
 const MongooseUser = mongoose.model('User', userSchema);
@@ -26,6 +34,14 @@ class MemoryUserDoc {
     this.refreshTokenHash = data.refreshTokenHash || null;
     this.isActive = data.isActive !== undefined ? data.isActive : true;
     this.createdAt = data.createdAt || new Date();
+    this.notificationPreferences = {
+      email: data.notificationPreferences?.email !== undefined ? data.notificationPreferences.email : null,
+      dailyReminderEnabled: data.notificationPreferences?.dailyReminderEnabled !== undefined ? data.notificationPreferences.dailyReminderEnabled : true,
+      potdReminderEnabled: data.notificationPreferences?.potdReminderEnabled !== undefined ? data.notificationPreferences.potdReminderEnabled : true,
+      contestAlertEnabled: data.notificationPreferences?.contestAlertEnabled !== undefined ? data.notificationPreferences.contestAlertEnabled : true,
+      reminderTime: data.notificationPreferences?.reminderTime || '19:00',
+      timezone: data.notificationPreferences?.timezone || 'Asia/Kolkata'
+    };
   }
 
   async save() {
@@ -44,7 +60,13 @@ const User = {
     for (const user of memoryStore.values()) {
       let match = true;
       for (const [key, val] of Object.entries(query)) {
-        if (user[key] !== val) {
+        let userVal;
+        if (key.includes('.')) {
+          userVal = key.split('.').reduce((acc, part) => acc?.[part], user);
+        } else {
+          userVal = user[key];
+        }
+        if (userVal !== val) {
           match = false;
           break;
         }
@@ -68,9 +90,19 @@ const User = {
     const results = [];
     for (const user of memoryStore.values()) {
       let match = true;
-      if (query.isActive !== undefined && user.isActive !== query.isActive) match = false;
-      if (query.refreshTokenHash && query.refreshTokenHash.$ne !== undefined) {
-        if (user.refreshTokenHash === query.refreshTokenHash.$ne) match = false;
+      for (const [key, val] of Object.entries(query)) {
+        let userVal;
+        if (key.includes('.')) {
+          userVal = key.split('.').reduce((acc, part) => acc?.[part], user);
+        } else {
+          userVal = user[key];
+        }
+
+        if (val && typeof val === 'object' && val.$ne !== undefined) {
+          if (userVal === val.$ne) match = false;
+        } else if (val !== undefined && userVal !== val) {
+          match = false;
+        }
       }
       if (match) results.push(user);
     }
@@ -83,7 +115,29 @@ const User = {
     }
     const user = memoryStore.get(id ? id.toString() : '');
     if (!user) return null;
-    Object.assign(user, update);
+
+    const applyUpdates = (source) => {
+      for (const [key, val] of Object.entries(source)) {
+        if (key.includes('.')) {
+          const parts = key.split('.');
+          let target = user;
+          for (let i = 0; i < parts.length - 1; i++) {
+            if (!target[parts[i]]) target[parts[i]] = {};
+            target = target[parts[i]];
+          }
+          target[parts[parts.length - 1]] = val;
+        } else {
+          user[key] = val;
+        }
+      }
+    };
+
+    if (update.$set) {
+      applyUpdates(update.$set);
+    } else {
+      applyUpdates(update);
+    }
+
     memoryStore.set(id.toString(), user);
     return user;
   },

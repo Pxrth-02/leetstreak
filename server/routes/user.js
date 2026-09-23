@@ -23,7 +23,8 @@ router.get('/me', async (req, res) => {
       id: user._id,
       name: user.name,
       email: user.email,
-      leetcodeUsername: user.leetcodeUsername
+      leetcodeUsername: user.leetcodeUsername,
+      notificationPreferences: user.notificationPreferences
     });
   } catch (error) {
     console.error('Get /me Error:', error);

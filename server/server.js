@@ -5,6 +5,9 @@ import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
+import leetcodeRoutes from './routes/leetcode.js';
+import preferencesRoutes from './routes/preferences.js';
+import { startScheduler } from './services/scheduler.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -23,7 +26,7 @@ app.use(cookieParser());
 app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
-    module: 1,
+    module: 2,
     db: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
   });
 });
@@ -31,6 +34,8 @@ app.get('/health', (req, res) => {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/leetcode', leetcodeRoutes);
+app.use('/api/user', preferencesRoutes);
 
 // 404 Handler
 app.use((req, res) => {
@@ -66,5 +71,6 @@ async function initDb() {
 }
 
 initDb();
+startScheduler();
 
 export default app;
